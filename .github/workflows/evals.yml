@@ -1,0 +1,25 @@
+name: Evals
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release --bin evalworker
+      - run: ./tinyeval -n 3
+        if: env.ANTHROPIC_API_KEY != ''
+      - run: echo "::notice::Evals skipped. Add the ANTHROPIC_API_KEY repository secret to run them."
+        if: env.ANTHROPIC_API_KEY == ''
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: eval-results
+          path: eval-results.json
