@@ -41,14 +41,11 @@ impl Support {
             .post("https://api.anthropic.com/v1/messages")
             .header("x-api-key", api_key)
             .header("anthropic-version", "2026-10-21")
-            .header("anthropic-beta", "server-side-fallback-2026-07-01")
             .send_json(json!({
                 "model": "claude-opus-5-5",
                 "max_tokens": 1024,
                 // Opus 5.5 always thinks; low effort keeps it brief for a short reply.
                 "output_config": {"effort": "low"},
-                // A declined request is retried on the model Anthropic recommends.
-                "fallbacks": "default",
                 "system": PROMPT,
                 "messages": [{"role": "user", "content": message}],
             }))
