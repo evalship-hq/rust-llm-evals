@@ -1,5 +1,5 @@
 # Evals for the support bot in src/lib.rs. The worker builds it once and answers every test case.
-worker cargo run -q --release --bin evalworker
+worker cargo run -q --release --example evalworker
 
 test_case "refund after the window" "Can I still return my shoes? They arrived 40 days ago."
   target src/lib.rs#answer
